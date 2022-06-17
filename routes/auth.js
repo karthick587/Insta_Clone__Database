@@ -27,6 +27,22 @@ const {
 
 
 } = require('../controllers/auth');
+
+
+const {
+    createConversation,
+    getConvbySenderreceiverId,
+    getConvbyId
+
+} = require('../controllers/conversation');
+
+
+const {
+    createmessage,
+    getMessgaes,
+} = require('../controllers/messages');
+
+
 const {
     UpdatedUsers,
     Register,
@@ -39,19 +55,51 @@ const {
 } = require('../controllers/users')
 
 
-
+const {
+    userPost,
+    getAllPost,
+    GetPostByUserId,
+} = require('../controllers/post')
 
 
 //Login & Forgot password API
 router.get("/verifytoken/:token", verifyToken);
+
+
 //login for admin and vendors
 router.post("/login/validate", loginValidate);
 router.post("/user/register", Register);
+
+
+
+//post
+router.post("/user/post", upload.array("files"), userPost);
+router.get("/user/All/post", getAllPost);
+router.get("/user/post/:Id", GetPostByUserId);
+
+
+
+//conversation
+
+router.post("/conv/add", createConversation)
+router.get("/conv/byId/:Id", getConvbyId);
+router.get("/conv/user&receiver/Id", getConvbySenderreceiverId);
+
+
+
+//message
+
+router.post("/message/send", createmessage)
+router.get("/messages/:Id", getMessgaes);
+
+
+
+//user
 router.get("/user/list", UserList);
 router.get("/users/list/:Id", getUsersbyId);
-router.put("/user/update/:id",upload.single("file"),UpdatedUsers)
-router.post("/user/follow",usersFollow)
-router.post("/user/Unfollow",usersUnFollow)
-router.get("/user/following/:Id",UserFollowingList)
-router.get("/user/follower/:Id",UserFollowersList)
+router.put("/user/update/:Id", upload.single("file"), UpdatedUsers)
+router.post("/user/follow", usersFollow)
+router.post("/user/Unfollow", usersUnFollow)
+router.get("/user/following/:Id", UserFollowingList)
+router.get("/user/follower/:Id", UserFollowersList)
 module.exports = router;

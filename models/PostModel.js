@@ -3,20 +3,19 @@ const mongoose = require("mongoose");
 const PostSchema = new mongoose.Schema({
 
     imgOrvideos: {
-        data: Buffer,
-        contentType: String
+        type: Array
     },
     userId: {
-        type: Number,
+        type: String,
     },
     UserName: {
         type: String,
     },
     comments: {
-        type: String,
+        type: Array
     },
     likes: {
-        type: String,
+        type: Array
     },
     Email: {
         type: String
