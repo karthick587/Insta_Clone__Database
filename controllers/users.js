@@ -108,7 +108,7 @@ const UpdatedUsers = async (req, res) => {
     if (req?.file === undefined) {
         userModel.findById({ _id: id }, function (err, result) {
             if (err) {
-                res.send({ statusCode: 400, message: "Failed" });
+                res.send({ statusCode: 400, message: err });
             } else {
                 userModel.findOneAndUpdate({ _id: id },
                     {
@@ -123,7 +123,7 @@ const UpdatedUsers = async (req, res) => {
                         }
                     }, function (err, result) {
                         if (err) {
-                            res.send({ statusCode: 400, message: "Failed" });
+                            res.send({ statusCode: 400, message: err });
                         } else {
                             res.send({ statusCode: 200, message: "Updated Successfully" });
                         }
@@ -135,7 +135,7 @@ const UpdatedUsers = async (req, res) => {
 
         userModel.findById({ _id: id }, function (err, result) {
             if (err) {
-                res.send({ statusCode: 400, message: "Failed" });
+                res.send({ statusCode: 400, message: err });
             } else {
                 userModel.findOneAndUpdate({ _id: id },
                     {
@@ -151,7 +151,7 @@ const UpdatedUsers = async (req, res) => {
                         }
                     }, function (err, result) {
                         if (err) {
-                            res.send({ statusCode: 400, message: "Failed" });
+                            res.send({ statusCode: 400, message: err });
                         } else {
                             res.send({ statusCode: 200, message: "Updated Successfully" });
                         }
