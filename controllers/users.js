@@ -106,7 +106,7 @@ const UpdatedUsers = async (req, res) => {
     const Modified_On = moment().tz('Asia/Kolkata').format("DD-MM-YYYY hh:mm A");
 
     if (req?.file === undefined) {
-        userModel.findById({ _id: id }, function (err, result) {
+        userModel.find({ _id: id }, function (err, result) {
             if (err) {
                 res.send({ statusCode: 400, message: err });
             } else {
@@ -133,7 +133,7 @@ const UpdatedUsers = async (req, res) => {
     } else {
         const imagesUrl = await cloudinary.uploader.upload(req.file.path, { width: 185, height: 185, crop: "fill" });
 
-        userModel.findById({ _id: id }, function (err, result) {
+        userModel.find({ _id: id }, function (err, result) {
             if (err) {
                 res.send({ statusCode: 400, message: err });
             } else {
