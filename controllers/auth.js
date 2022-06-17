@@ -26,7 +26,7 @@ const loginValidate = (req, res) => {
             const token = JWT.sign({
                 id: result._id,
                 Email : result.Email
-            }, 'secret123', { expiresIn:  60 * 60 * 96 })
+            }, 'secret123', { expiresIn:  120 * 60 * 96 })
             res.send({ statusCode: 200, message: "Login Succeed",userId:result._id, token: token });
         }
     });
