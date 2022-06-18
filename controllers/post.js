@@ -161,7 +161,7 @@ const GetPostByUserId = (req, res) => {
             res.send({ statusCode: 400, message: "There was a problem adding the information to the database." });
         } else {
             if (result.length === 0) {
-                res.send({ message: "No Records Found" })
+                res.send([])
             } else {
                 res.send(result)
             }
@@ -175,7 +175,7 @@ const getAllPost = (req, res) => {
             res.send({ statusCode: 400, message: "There was a problem adding the information to the database." });
         } else {
             if (result.length === 0) {
-                res.send({ message: "No Records Found" })
+                res.send([])
             } else {
                 res.send(result)
             }

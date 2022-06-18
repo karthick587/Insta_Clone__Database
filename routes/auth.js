@@ -24,8 +24,6 @@ app.options('*', cors());
 const {
     verifyToken,
     loginValidate,
-
-
 } = require('../controllers/auth');
 
 
