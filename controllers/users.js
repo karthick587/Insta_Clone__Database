@@ -96,7 +96,7 @@ const getUsersbyId = (req, res) => {
 
 const UpdatedUsers = async (req, res) => {
 
-    const id = req.params.id;
+    const id = req.body.id;
     const PhoneNumber = req.body.PhoneNumber;
     const status = req.body.status;
     const UserName = req.body.UserName;

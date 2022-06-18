@@ -97,7 +97,7 @@ router.get("/messages/:Id", getMessgaes);
 //user
 router.get("/user/list", UserList);
 router.get("/users/list/:Id", getUsersbyId);
-router.put("/user/update/:Id", upload.single("file"), UpdatedUsers)
+router.put("/user/update", upload.single("file"), UpdatedUsers)
 router.post("/user/follow", usersFollow)
 router.post("/user/Unfollow", usersUnFollow)
 router.get("/user/following/:Id", UserFollowingList)
