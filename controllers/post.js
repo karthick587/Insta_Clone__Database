@@ -117,9 +117,6 @@ const { transporter } = require('../middleware/nodemailer');
 //     }
 // };
 
-
-
-
 const userPost = async (req, res) => {
     const userId = req.body.userId;
     const UserName = req.body.UserName;
@@ -183,8 +180,65 @@ const getAllPost = (req, res) => {
     });
 }
 
-module.exports = {
 
+const like = (req, res) => {
+    const PostId = req.body.PostId;
+    const likedUserId = req.body.likedUserId;
+    const Created_On = moment().tz('Asia/Kolkata').format("DD-MM-YYYY hh:mm A");
+
+    const like = {
+        likedUserId: likedUserId,
+        Created_On: Created_On
+    }
+
+    postModel.find({ _id: PostId }, function (err, result) {
+        if (err) {
+            res.send({ statusCode: 400, message: err });
+        } else {
+            // var newfollowing = {...result.following, userfollow}
+            if (result.length !== 0) {
+                result[0]?.likes?.find(val => val.likedUserId === likedUserId) ?
+                    postModel.findOneAndUpdate({ _id: PostId },
+                        {
+                            $pull: {
+                                likes: {
+                                    likedUserId: likedUserId,
+                                    Created_On: result[0]?.likes?.find(val => val.likedUserId === likedUserId)[0]?.Created_On
+                                },
+                            }
+                        }, function (err2, result2) {
+                            if (err2) {
+                                res.send({ statusCode: 400, message: "Failed" });
+                            } else {
+                                res.send({ statusCode: 200, message: "unLiked Successfully" });
+                            }
+                        })
+                    :
+                    postModel.findOneAndUpdate({ _id: PostId },
+                        {
+                            $push: {
+                                likes: like,
+                            }
+                        }, function (err, result) {
+                            if (err) {
+                                res.send({ statusCode: 400, message: err });
+                            } else {
+                                // var newfollowers = {...result.followers, userfollowed}
+                                res.send({ statusCode: 200, message: "liked Successfully" });
+                            }
+                        })
+            } else {
+                res.send({ statusCode: 400, message: "Post not Exist" });
+            }
+
+        }
+    });
+}
+
+
+
+module.exports = {
+    like,
     userPost,
     getAllPost,
     GetPostByUserId
