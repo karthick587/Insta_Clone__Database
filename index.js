@@ -35,6 +35,7 @@ app.use('/api', authRoute);
 // const removeruser = (id) => {
 //   users = users.filter(user => user.socketId !== id)
 // }
+//test
 // const getUser=(userId)=>{
 // return users.find(users=>users.userId===userId)
 // }
