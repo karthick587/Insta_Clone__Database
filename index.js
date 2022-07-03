@@ -19,6 +19,46 @@ const authRoute = require("./routes/auth");
 // const { find } = require("./models/PostModel");
 
 app.use('/api', authRoute);
+
+
+
+
+
+
+const Pusher = require('pusher');
+
+const pusher = new Pusher({
+  appId: "1429680",
+  key: "d9259f061ae07969923f",
+  secret: "27121b8f760b2f667676",
+  cluster: "ap2",
+});
+pusher.trigger('chat', 'message', "hello world");
+// listen for 'new-comment' event on channel 1, 2 and 3
+
+console.log("channel")
+// const Pusher2 = require('pusher-js');
+
+// const pusher2 = new Pusher2('d9259f061ae07969923f', {
+//   cluster: 'ap2'
+// });
+
+// const channel = pusher2.subscribe('chat');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // //socket io 
 // // npm npm i socket.io
 // const io = require("socket.io")(8900, {

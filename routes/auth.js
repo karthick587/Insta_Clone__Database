@@ -58,6 +58,7 @@ const {
     getAllPost,
     GetPostByUserId,
     like,
+    FeedS,
 } = require('../controllers/post')
 
 
@@ -74,8 +75,10 @@ router.post("/user/register", Register);
 //post
 router.post("/user/post", upload.array("files"), userPost);
 router.get("/user/All/post", getAllPost);
+
+router.get("/user/feed/:Id", FeedS);
 router.get("/user/post/:Id", GetPostByUserId);
-router.post("/user/post/like", like)
+router.post("/user/post/like", like);
 
 
 //conversation

@@ -1,5 +1,6 @@
 
 const postModel = require("../models/PostModel");
+const userModel = require("../models/userModels");
 const JWT = require('jsonwebtoken');
 const moment = require('moment-timezone');
 const cloudinary = require("../middleware/cloudnary");
@@ -127,7 +128,7 @@ const userPost = async (req, res) => {
     // const UserName = req.body.UserName;
     var imageUrlList = [];
     for (let i = 0; i < req.files.length; i++) {
-        var result = await cloudinary.uploader.upload(req.files[i].path, { width: 640, height: 426, crop: "scale", format: 'webp' });
+        var result = await cloudinary.uploader.upload(req.files[i].path, { width: 640, height: 640, crop: "scale", format: 'webp' });
         imageUrlList.push(result.url);
     };
     if (imageUrlList && userId && UserName && Created_On && Email) {
@@ -166,7 +167,6 @@ const GetPostByUserId = (req, res) => {
     });
 }
 const getAllPost = (req, res) => {
-
     postModel.find({}, function (err, result) {
         if (err) {
             res.send({ statusCode: 400, message: "There was a problem adding the information to the database." });
@@ -180,7 +180,36 @@ const getAllPost = (req, res) => {
     });
 }
 
+function FeedS(req, res) {
+    const userId = req.params.Id
+    var data = []
+    postModel.find({}, function (err, datas) {
+        if (err) {
+            res.send({ statusCode: 400, message: "There was a problem adding the information to the database." });
+        } else {
+            if (datas.length === 0) {
+                res.send([])
+            } else {
+                //    res.send(datas)
+                userModel.find({
+                    _id: userId
+                }, function (err, result) {
+                    if (err) {
+                        res.send({ statusCode: 400, message: "There was a problem adding the information to the database." });
+                    } else {
+                        datas?.forEach(val => {
+                            if (result[0]?.following?.find(value => value.UserId === val.userId)) {
+                                data.push(val)
+                            }
+                        })
+                        res.send({ statusCode: 200, data: data });
 
+                    }
+                });
+            }
+        }
+    });
+}
 const like = (req, res) => {
     const PostId = req.body.PostId;
     const likedUserId = req.body.likedUserId;
@@ -238,8 +267,10 @@ const like = (req, res) => {
 
 
 module.exports = {
+    FeedS,
     like,
     userPost,
     getAllPost,
-    GetPostByUserId
+    GetPostByUserId,
+
 };
