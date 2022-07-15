@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require('cors');
-
+const postModel = require("../models/PostModel");
 const app = express();
 
 const router = express.Router();
@@ -37,6 +37,7 @@ const {
 
 const {
     createmessage,
+
     getMessgaes,
 } = require('../controllers/messages');
 
@@ -60,7 +61,117 @@ const {
     like,
     FeedS,
 } = require('../controllers/post')
+var clients = [];
+// router.get('/status', function (request, response) {
+//     const headers = {
+//         'Content-Type': 'text/event-stream',
+//         'Connection': 'keep-alive',
+//         'Cache-Control': 'no-cache'
+//     };
+//     response.writeHead(200, headers);
 
+//     // response.json({ clients: clients.length })
+//     const data = `data: ${JSON.stringify(clients)}\n\n`;
+
+//     response.write(data);
+// });
+
+var facts = [{
+    id: "rdyhdtf",
+    data:"rgddfh"
+}];
+
+
+var data = "Real-Time Update 1";
+var number = 1;
+// router.get('/server-sent-events', function (req, res) {
+
+//     res.writeHead(200, {
+//         'Content-Type': 'text/event-stream',
+//         'Cache-Control': 'no-cache',
+//         'Connection': 'keep-alive'
+//     });
+
+
+//     res.write("data: " + "gdv" + "\n\n")
+
+// })
+
+
+// router.get('/status', (request, response) => response.json({clients: clients.length}));
+
+function eventsHandler(request, response, next) {
+    const headers = {
+        'Content-Type': 'text/event-stream',
+        'Connection': 'keep-alive',
+        'Cache-Control': 'no-cache'
+    };
+    response.writeHead(200, headers);
+
+    const data = `data: ${JSON.stringify(facts)}\n\n`;
+
+    response.write(data);
+
+    const clientId = Date.now();
+
+    const newClient = {
+        id: clientId,
+        response
+    };
+    clients.push(newClient);
+    // clients=[...clients,newClient]
+
+    // request.on('close', () => {
+        
+    //     clients = clients.filter(client => client.id !== clientId);
+    // });
+}
+console.log(clients)
+console.log(facts)
+
+router.get('/events', eventsHandler);
+
+
+
+function clientHandler(request, response, next) {
+    const headers = {
+        'Content-Type': 'text/event-stream',
+        'Connection': 'keep-alive',
+        'Cache-Control': 'no-cache'
+    };
+    response.writeHead(200, headers);
+
+    const data = `data: ${JSON.stringify(clients)}\n\n`;
+
+    response.write(data);
+
+   
+
+    // request.on('close', () => {
+        
+    //     clients = clients.filter(client => client.id !== clientId);
+    // });
+}
+
+router.get('/client', clientHandler);
+
+
+
+
+
+
+function sendEventsToAll(newFact) {
+    clients.forEach(client => client.response.write(`data: ${JSON.stringify(newFact)}\n\n`))
+}
+
+async function addFact(request, respsonse, next) {
+    const newFact = request.body;
+    facts.push(newFact);
+    respsonse.json(newFact)
+    return sendEventsToAll(newFact);
+}
+
+router.post('/fact', addFact);
 
 //Login & Forgot password API
 router.get("/verifytoken/:token", verifyToken);

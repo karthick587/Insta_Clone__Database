@@ -166,7 +166,9 @@ const GetPostByUserId = (req, res) => {
         }
     });
 }
-const getAllPost = (req, res) => {
+const getAllPost =  function(req, res) {
+  
+
     postModel.find({}, function (err, result) {
         if (err) {
             res.send({ statusCode: 400, message: "There was a problem adding the information to the database." });
@@ -174,6 +176,7 @@ const getAllPost = (req, res) => {
             if (result.length === 0) {
                 res.send([])
             } else {
+                
                 res.send(result)
             }
         }
