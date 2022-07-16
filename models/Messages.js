@@ -5,6 +5,9 @@ const MessageSchema = new mongoose.Schema({
     ConversationId: {
         type: String
     },
+    sentBy:{
+        type: String
+    },
     text: {
         type: String
     },

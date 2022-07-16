@@ -8,11 +8,77 @@ const { transporter } = require('../middleware/nodemailer');
 //Get Admin details by email
 
 
+var clients = [];
+// router.get('/status', function (request, response) {
+//     const headers = {
+//         'Content-Type': 'text/event-stream',
+//         'Connection': 'keep-alive',
+//         'Cache-Control': 'no-cache'
+//     };
+//     response.writeHead(200, headers);
+
+//     // response.json({ clients: clients.length })
+//     const data = `data: ${JSON.stringify(clients)}\n\n`;
+
+//     response.write(data);
+// });
+
+var facts = [{
+    id: "rdyhdtf",
+    data:"rgddfh"
+}];
+
+// router.get('/server-sent-events', function (req, res) {
+
+//     res.writeHead(200, {
+//         'Content-Type': 'text/event-stream',
+//         'Cache-Control': 'no-cache',
+//         'Connection': 'keep-alive'
+//     });
+
+
+//     res.write("data: " + "gdv" + "\n\n")
+
+// })
+
+
+// router.get('/status', (request, response) => response.json({clients: clients.length}));
+
+function eventsHandler(request, response, next) {
+    const headers = {
+        'Content-Type': 'text/event-stream',
+        'Connection': 'keep-alive',
+        'Cache-Control': 'no-cache'
+    };
+    response.writeHead(200, headers);
+
+    const data = `data: ${JSON.stringify(facts)}\n\n`;
+
+    response.write(data);
+
+    const clientId = Date.now();
+
+    const newClient = {
+        id: clientId,
+        response
+    };
+    clients.push(newClient);
+}
+
+function sendEventsToAll(newFact) {
+    clients.forEach(client => client.response.write(`data: ${JSON.stringify(newFact)}\n\n`))
+}
+
+
+
+
+
 const createmessage = (req, res) => {
 
     const Created_On = moment().tz('Asia/Kolkata').format("DD-MM-YYYY hh:mm A");
     const message = new messageModel({
         ConversationId: req.body.ConversationId,
+        sentBy:req.body.sentBy,
         text: req.body.text,
         Created_On: Created_On
     });
@@ -20,6 +86,8 @@ const createmessage = (req, res) => {
         if (err) {
             res.send({ statusCode: 400, message: "Failed" });
         } else {
+            facts.push(result);
+            return sendEventsToAll(result);
             res.send({ statusCode: 200, message: "Registered Successfully" });
         }
     });
@@ -51,7 +119,7 @@ const getMessgaes = (req, res) => {
 
 
 module.exports = {
-
+    eventsHandler,
     createmessage,
     getMessgaes,
 
