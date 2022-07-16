@@ -9,41 +9,8 @@ const { transporter } = require('../middleware/nodemailer');
 
 
 var clients = [];
-// router.get('/status', function (request, response) {
-//     const headers = {
-//         'Content-Type': 'text/event-stream',
-//         'Connection': 'keep-alive',
-//         'Cache-Control': 'no-cache'
-//     };
-//     response.writeHead(200, headers);
 
-//     // response.json({ clients: clients.length })
-//     const data = `data: ${JSON.stringify(clients)}\n\n`;
-
-//     response.write(data);
-// });
-
-var facts = [{
-    id: "rdyhdtf",
-    data:"rgddfh"
-}];
-
-// router.get('/server-sent-events', function (req, res) {
-
-//     res.writeHead(200, {
-//         'Content-Type': 'text/event-stream',
-//         'Cache-Control': 'no-cache',
-//         'Connection': 'keep-alive'
-//     });
-
-
-//     res.write("data: " + "gdv" + "\n\n")
-
-// })
-
-
-// router.get('/status', (request, response) => response.json({clients: clients.length}));
-
+var facts = []
 function eventsHandler(request, response, next) {
     const headers = {
         'Content-Type': 'text/event-stream',
@@ -51,12 +18,15 @@ function eventsHandler(request, response, next) {
         'Cache-Control': 'no-cache'
     };
     response.writeHead(200, headers);
-
     const data = `data: ${JSON.stringify(facts)}\n\n`;
-
     response.write(data);
+    const clientId = Date.now();
 
-   
+    const newClient = {
+        id: clientId,
+        response
+    };
+    clients.push(newClient);
 }
 
 function sendEventsToAll(newFact) {
@@ -67,24 +37,32 @@ function sendEventsToAll(newFact) {
 
 
 
-const createmessage = (req, res) => {
+async function createmessage(req, res) {
 
     const Created_On = moment().tz('Asia/Kolkata').format("DD-MM-YYYY hh:mm A");
     const message = new messageModel({
         ConversationId: req.body.ConversationId,
-        sentBy:req.body.sentBy,
+        sentBy: req.body.sentBy,
         text: req.body.text,
         Created_On: Created_On
     });
+    let data = {
+        ConversationId: req.body.ConversationId,
+        sentBy: req.body.sentBy,
+        text: req.body.text,
+        Created_On: Created_On
+    }
+    facts.push(data);
+
     message.save(function (err, result) {
         if (err) {
             res.send({ statusCode: 400, message: "Failed" });
         } else {
-            facts.push(result);
-             sendEventsToAll(result);
+
             res.send({ statusCode: 200, message: "Registered Successfully" });
         }
     });
+    return sendEventsToAll(data)
 }
 
 
