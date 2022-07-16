@@ -62,7 +62,7 @@ async function createmessage(req, res) {
             res.send({ statusCode: 200, message: "Registered Successfully" });
         }
     });
-    return sendEventsToAll(data)
+     sendEventsToAll(data)
 }
 
 
