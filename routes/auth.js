@@ -76,7 +76,7 @@ const {
 //Login & Forgot password API
 router.get("/verifytoken/:token", verifyToken);
 
-router.get('/events', eventsHandler);
+// router.get('/events', eventsHandler);
 //login for admin and vendors
 router.post("/login/validate", loginValidate);
 router.post("/user/register", Register);
