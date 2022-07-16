@@ -8,44 +8,36 @@ const { transporter } = require('../middleware/nodemailer');
 //Get Admin details by email
 
 
-// var clients = [];
+var clients = [];
 
-// var facts = []
-// function eventsHandler(request, response, next) {
-//     const headers = {
-//         'Content-Type': 'text/event-stream',
-//         'Connection': 'keep-alive',
-//         'Cache-Control': 'no-cache'
-//     };
-//     response.writeHead(200, headers);
-//     const data = `data: ${JSON.stringify(facts)}\n\n`;
-//     response.write(data);
-//     const clientId = Date.now();
+var facts = []
+function eventsHandler(request, response, next) {
+    const headers = {
+        'Content-Type': 'text/event-stream',
+        'Connection': 'keep-alive',
+        'Cache-Control': 'no-cache'
+    };
+    response.writeHead(200, headers);
+    const data = `data: ${JSON.stringify(facts)}\n\n`;
+    response.write(data);
+    const clientId = Date.now();
 
-//     const newClient = {
-//         id: clientId,
-//         response
-//     };
-//     clients.push(newClient);
-// }
+    const newClient = {
+        id: clientId,
+        response
+    };
+    clients.push(newClient);
+}
 
-// function sendEventsToAll(newFact) {
-//     clients.forEach(client => client.response.write(`data: ${JSON.stringify(newFact)}\n\n`))
-// }
-
-
-const Pusher = require('pusher');
-
-const pusher = new Pusher({
-  appId: "1429680",
-  key: "d9259f061ae07969923f",
-  secret: "27121b8f760b2f667676",
-  cluster: "ap2",
-});
+function sendEventsToAll(newFact) {
+    clients.forEach(client => client.response.write(`data: ${JSON.stringify(newFact)}\n\n`))
+}
 
 
 
- function createmessage(req, res) {
+
+
+async function createmessage(req, res) {
 
     const Created_On = moment().tz('Asia/Kolkata').format("DD-MM-YYYY hh:mm A");
     const message = new messageModel({
@@ -60,17 +52,17 @@ const pusher = new Pusher({
         text: req.body.text,
         Created_On: Created_On
     }
-    // facts.push(data);
+    facts.push(data);
 
     message.save(function (err, result) {
         if (err) {
             res.send({ statusCode: 400, message: "Failed" });
         } else {
-            pusher.trigger('chat', 'message', data);
+
             res.send({ statusCode: 200, message: "Registered Successfully" });
         }
     });
-    //  sendEventsToAll(data)
+     sendEventsToAll(data)
 }
 
 
@@ -99,7 +91,7 @@ const getMessgaes = (req, res) => {
 
 
 module.exports = {
-    // eventsHandler,
+    eventsHandler,
     createmessage,
     getMessgaes,
 
