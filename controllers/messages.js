@@ -56,13 +56,7 @@ function eventsHandler(request, response, next) {
 
     response.write(data);
 
-    const clientId = Date.now();
-
-    const newClient = {
-        id: clientId,
-        response
-    };
-    clients.push(newClient);
+   
 }
 
 function sendEventsToAll(newFact) {
@@ -87,7 +81,7 @@ const createmessage = (req, res) => {
             res.send({ statusCode: 400, message: "Failed" });
         } else {
             facts.push(result);
-            return sendEventsToAll(result);
+             sendEventsToAll(result);
             res.send({ statusCode: 200, message: "Registered Successfully" });
         }
     });
