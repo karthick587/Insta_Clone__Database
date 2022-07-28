@@ -46,24 +46,15 @@ app.use('/api', authRoute);
 
 
 
-const server = require("http").createServer(app);
-const io = require("socket.io")(server, {
-  origin: "https://insta-clone-blue.vercel.app",
-});
+
 
 
 
 //socket io 
 // npm npm i socket.io
-
-// const io = require("socket.io")(8900, {
-//   cors: {
-
-//   }
-// })
-
-
-
+const io = require("socket.io")(8900, {
+  path: '/socket.io',
+})
 let users = []
 
 const adduser = (userId, socketId) => {
@@ -73,25 +64,25 @@ const adduser = (userId, socketId) => {
 const removeruser = (id) => {
   users = users.filter(user => user.socketId !== id)
 }
-const getUser = (userId) => {
-  return users.find(users => users.userId === userId)
+const getUser=(userId)=>{
+return users.find(users=>users.userId===userId)
 }
 io.on("connection", (socket) => {
   console.log("a user connected")
-  //add user and get ids
+//add user and get ids
   socket.on("adduser", userId => {
     adduser(userId, socket.id)
     io.emit("getUser", users)
   })
   //send message
-  socket.on("sendMessage", ({ senderId, receiverId, text }) => {
-    const user = getUser(receiverId)
-    io.to(user.socketId).emit("getMessage", {
+  socket.on("sendMessage",({senderId,receiverId,text})=>{
+    const user=getUser(receiverId)
+    io.to(user.socketId).emit("getMessage",{
       senderId,
       text,
     })
   })
-  // remove stored user
+// remove stored user
   socket.on("disconnect", () => {
     console.log("a user disconnected!")
     removeruser(socket.id);
