@@ -52,8 +52,11 @@ app.use('/api', authRoute);
 
 //socket io 
 // npm npm i socket.io
-var serv = require("http").createServer(app);
-const io = require('socket.io')(serv);
+const io = require("socket.io")(8900, {
+  cors: {
+    origin: "https://insta-clone-blue.vercel.app",
+  }
+})
 let users = []
 
 const adduser = (userId, socketId) => {
