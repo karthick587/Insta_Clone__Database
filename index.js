@@ -20,7 +20,7 @@ const authRoute = require("./routes/auth");
 
 app.use('/api', authRoute);
 
-const http=require('http').Server(app)
+// const http=require('http').Server(app)
 
 
 
@@ -52,11 +52,11 @@ const http=require('http').Server(app)
 
 // socket io 
 // npm npm i socket.io
-const io = require("socket.io")(http, {
-  cors: {
-    origin: "https://jewel-seven.vercel.app",
-  }
-})
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+
 let users = []
 
 const adduser = (userId, socketId) => {
