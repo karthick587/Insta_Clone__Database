@@ -52,45 +52,45 @@ app.use('/api', authRoute);
 
 //socket io 
 // npm npm i socket.io
-const io = require("socket.io")(8900, {
-  cors: {
-    origin: "https://insta-clone-blue.vercel.app",
-  }
-})
-let users = []
+// const io = require("socket.io")(8900, {
+//   cors: {
+//     origin: "http://localhost:3000",
+//   }
+// })
+// let users = []
 
-const adduser = (userId, socketId) => {
-  users.push({ userId, socketId })
-}
+// const adduser = (userId, socketId) => {
+//   users.push({ userId, socketId })
+// }
 
-const removeruser = (id) => {
-  users = users.filter(user => user.socketId !== id)
-}
-const getUser=(userId)=>{
-return users.find(users=>users.userId===userId)
-}
-io.on("connection", (socket) => {
-  console.log("a user connected")
-//add user and get ids
-  socket.on("adduser", userId => {
-    adduser(userId, socket.id)
-    io.emit("getUser", users)
-  })
-  //send message
-  socket.on("sendMessage",({senderId,receiverId,text})=>{
-    const user=getUser(receiverId)
-    io.to(user.socketId).emit("getMessage",{
-      senderId,
-      text,
-    })
-  })
-// remove stored user
-  socket.on("disconnect", () => {
-    console.log("a user disconnected!")
-    removeruser(socket.id);
-    io.emit("getUser", users)
-  })
-})
+// const removeruser = (id) => {
+//   users = users.filter(user => user.socketId !== id)
+// }
+// const getUser=(userId)=>{
+// return users.find(users=>users.userId===userId)
+// }
+// io.on("connection", (socket) => {
+//   console.log("a user connected")
+// //add user and get ids
+//   socket.on("adduser", userId => {
+//     adduser(userId, socket.id)
+//     io.emit("getUser", users)
+//   })
+//   //send message
+//   socket.on("sendMessage",({senderId,receiverId,text})=>{
+//     const user=getUser(receiverId)
+//     io.to(user.socketId).emit("getMessage",{
+//       senderId,
+//       text,
+//     })
+//   })
+// // remove stored user
+//   socket.on("disconnect", () => {
+//     console.log("a user disconnected!")
+//     removeruser(socket.id);
+//     io.emit("getUser", users)
+//   })
+// })
 
 
 
