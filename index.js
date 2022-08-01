@@ -54,7 +54,7 @@ const http=require('http').Server(app)
 // npm npm i socket.io
 const io = require("socket.io")(http, {
   cors: {
-    origin: "https://jewel-seven.vercel.app",
+    origin: "https://jewel-seven.vercel.app:3000",
   }
 })
 let users = []
