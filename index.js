@@ -54,7 +54,7 @@ const http=require('http').Server(app)
 // npm npm i socket.io
 const io = require("socket.io")(http, {
   cors: {
-    origin: "https://jewel-seven.vercel.app:3000",
+    origin: "https://jewel-seven.vercel.app",
   }
 })
 let users = []
@@ -94,7 +94,7 @@ io.on("connection", (socket) => {
 
 
 
-http.listen(3001, () => {
+app.listen(3001, () => {
   console.log("Server is running at port 3001");
 });
 
